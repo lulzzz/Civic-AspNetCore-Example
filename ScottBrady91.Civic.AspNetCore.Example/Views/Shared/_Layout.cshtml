@@ -15,6 +15,7 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    <link rel="stylesheet" href="https://hosted-sip.civic.com/css/civic-modal.min.css">
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -33,6 +34,9 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><button id="civicLogin" class="btn btn-link navbar-btn">Login using Civic</button></li>
                 </ul>
             </div>
         </div>
@@ -65,7 +69,27 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
+    <script src="https://hosted-sip.civic.com/js/civic.sip.min.js"></script>
+<script>
+    var civicSip = new civic.sip({ appId: 'rJ3fVI9rz' });
+    var button = document.querySelector('#civicLogin');
+    button.addEventListener('click', function () {
+        civicSip.signup({ style: 'popup', scopeRequest: civicSip.ScopeRequests.BASIC_SIGNUP });
+    });
+    civicSip.on('auth-code-received', function (event) {
+        var jwtToken = event.response;
+        $.ajax({
+            url: 'home/login',
+            dataType: 'json',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({ "authCode": jwtToken }),
+            sucess: function() {
+                location.reload();
+            }
+        });
+    });
+</script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
