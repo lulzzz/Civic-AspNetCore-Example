@@ -64,7 +64,24 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
-
+<div class="row">
+    <div class="col-xs-12">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <h2>Authenticated!</h2>
+            <ul>
+                @foreach (var claim in User.Claims)
+                {
+                    <li><strong>@claim.Type</strong>: @claim.Value</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <h2>Unauthenticated</h2>
+        }
+    </div>
+</div>
 <div class="row">
     <div class="col-md-3">
         <h2>Application uses</h2>
