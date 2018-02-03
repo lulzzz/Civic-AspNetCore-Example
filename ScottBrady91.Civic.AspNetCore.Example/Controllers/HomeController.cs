@@ -86,6 +86,8 @@ namespace ScottBrady91.Civic.AspNetCore.Example.Controllers
 
             // sign in user
             var claimsIdentity = new ClaimsIdentity(userData.Select(x => new Claim(x.Label, x.Value)).ToList(), "cookie");
+            claimsIdentity.AddClaim(new Claim("userId", jObject["userId"].Value<string>()));
+
             await HttpContext.SignInAsync("cookie", new ClaimsPrincipal(claimsIdentity));
 
             return Ok();
